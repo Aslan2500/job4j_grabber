@@ -15,7 +15,7 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-    private static final Properties properties = new Properties();
+    private static final Properties prop = new Properties();
 
     public static Connection init(Properties properties) throws ClassNotFoundException, SQLException {
         Class.forName(properties.getProperty("driver_class"));
@@ -25,10 +25,9 @@ public class AlertRabbit {
         return DriverManager.getConnection(url, login, password);
     }
 
-
     public static void runTimePreferences(String path) {
         try (FileInputStream in = new FileInputStream(path)) {
-            properties.load(in);
+            prop.load(in);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,7 +35,7 @@ public class AlertRabbit {
 
     public static void main(String[] args) {
         runTimePreferences("src/main/resources/log4j.properties");
-        try (Connection cn = init(properties)) {
+        try (Connection cn = init(prop)) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -45,7 +44,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(Integer.parseInt(properties.getProperty("rabbit.interval")))
+                    .withIntervalInSeconds(Integer.parseInt(prop.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
