@@ -15,6 +15,7 @@ import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
+
     private static final Properties properties = new Properties();
 
     private static Connection initConnection(Properties properties) throws ClassNotFoundException, SQLException {
@@ -24,6 +25,7 @@ public class AlertRabbit {
         String password = properties.getProperty("password");
         return DriverManager.getConnection(url, login, password);
     }
+
     public static Properties readProperties(String string) {
         try (FileInputStream in = new FileInputStream(string)) {
             properties.load(in);
@@ -59,9 +61,11 @@ public class AlertRabbit {
     }
 
     public static class Rabbit implements Job {
+
         public Rabbit() {
             System.out.println(hashCode());
         }
+
         @Override
         public void execute(JobExecutionContext context) {
             System.out.println("Rabbit runs here ...");
