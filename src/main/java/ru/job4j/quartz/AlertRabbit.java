@@ -16,7 +16,7 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-    private static final Properties properties = new Properties();
+    private static final Properties PROPERTIES = new Properties();
 
     private static Connection initConnection(Properties properties) throws ClassNotFoundException, SQLException {
         Class.forName(properties.getProperty("driver_class"));
@@ -28,11 +28,11 @@ public class AlertRabbit {
 
     public static Properties readProperties(String string) {
         try (FileInputStream in = new FileInputStream(string)) {
-            properties.load(in);
+            PROPERTIES.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return properties;
+        return PROPERTIES;
     }
 
     public static void main(String[] args) {
