@@ -1,5 +1,12 @@
 package ru.job4j.grabber;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -24,6 +31,14 @@ public class Post {
         this.link = link;
         this.description = description;
         this.created = created;
+    }
+
+    private String retrieveDescription(String link) throws IOException {
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        Elements rows = document.select(".job_show_description__body");
+        Element aboutCompany = rows.select(".style-ugc").first();
+        return aboutCompany.text();
     }
 
     public int getId() {
