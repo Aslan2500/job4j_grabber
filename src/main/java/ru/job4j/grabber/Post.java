@@ -33,14 +33,6 @@ public class Post {
         this.created = created;
     }
 
-    private String retrieveDescription(String link) throws IOException {
-        Connection connection = Jsoup.connect(link);
-        Document document = connection.get();
-        Elements rows = document.select(".job_show_description__body");
-        Element aboutCompany = rows.select(".style-ugc").first();
-        return aboutCompany.text();
-    }
-
     public int getId() {
         return id;
     }
