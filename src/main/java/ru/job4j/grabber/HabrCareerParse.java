@@ -31,12 +31,7 @@ public class HabrCareerParse implements Parse {
                 Connection connection = Jsoup.connect(link + "?page=" + i);
                 Document document = connection.get();
                 Elements rows = document.select(".vacancy-card__inner");
-                rows.forEach(row -> {
-                    Element titleElement = row.select(".vacancy-card__title").first();
-                    Element timeElement = row.select(".vacancy-card__date").first().child(0);
-                    Element linkElement = titleElement.child(0);
-                    posts.add(getPost(titleElement, timeElement, linkElement));
-                });
+                rows.forEach(row -> posts.add(post(row)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,10 +39,13 @@ public class HabrCareerParse implements Parse {
         return posts;
     }
 
-    private Post getPost(Element title, Element time, Element link) {
-        String linkToVacancy = String.format("%s%s", SOURCE_LINK, link.attr("href"));
-        return new Post(title.text(), linkToVacancy, retrieveDescription(linkToVacancy),
-                dateTimeParser.parse(time.attr("datetime")));
+    private Post post(Element row) {
+        Element titleElement = row.select(".vacancy-card__title").first();
+        Element linkElement = titleElement.child(0);
+        Element dateTitleElement = row.select(".vacancy-card__date").first();
+        String linkToVacancy = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+        return new Post(titleElement.text(), linkToVacancy, retrieveDescription(linkToVacancy),
+                dateTimeParser.parse(dateTitleElement.attr("datetime")));
     }
 
     private String retrieveDescription(String link) {
