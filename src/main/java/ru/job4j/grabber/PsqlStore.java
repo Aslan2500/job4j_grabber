@@ -23,13 +23,6 @@ public class PsqlStore implements Store, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        if (cnn != null) {
-            cnn.close();
-        }
-    }
-
-    @Override
     public void save(Post post) {
         try (PreparedStatement preparedStatement =
                      cnn.prepareStatement("INSERT INTO post (name, text, link, created) "
@@ -39,6 +32,7 @@ public class PsqlStore implements Store, AutoCloseable {
             preparedStatement.setString(2, post.getDescription());
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
+            preparedStatement.execute();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     post.setId(generatedKeys.getInt(1));
@@ -53,7 +47,7 @@ public class PsqlStore implements Store, AutoCloseable {
     public List<Post> getAll() {
         List<Post> list = new ArrayList<>();
         try (PreparedStatement preparedStatement =
-                     cnn.prepareStatement("SELECT * FROM post", Statement.RETURN_GENERATED_KEYS)) {
+                     cnn.prepareStatement("SELECT * FROM post")) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     list.add(getPost(resultSet));
@@ -69,8 +63,7 @@ public class PsqlStore implements Store, AutoCloseable {
     public Post findById(int id) {
         Post post = null;
         try (PreparedStatement preparedStatement =
-                     cnn.prepareStatement("SELECT * FROM post WHERE id = ?",
-                             Statement.RETURN_GENERATED_KEYS)) {
+                     cnn.prepareStatement("SELECT * FROM post WHERE id = ?")) {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -89,6 +82,13 @@ public class PsqlStore implements Store, AutoCloseable {
                 resultSet.getString("text"),
                 resultSet.getString("link"),
                 resultSet.getTimestamp("created").toLocalDateTime());
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (cnn != null) {
+            cnn.close();
+        }
     }
 
     public static void main(String[] args) {
