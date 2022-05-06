@@ -30,10 +30,10 @@ public class User {
         System.out.printf("Removed %d %s%n", age, name);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
         GCDemo.info();
-        for (int i = 0; i < 10; i++) {
-            new User(i, "N" + i);
+        for (int i = 0; i < 100000; i++) {
+            new User(i, "N" + i).finalize();
         }
         System.gc();
         GCDemo.info();
