@@ -32,7 +32,7 @@ public class User {
 
     public static void main(String[] args) {
         GCDemo.info();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10; i++) {
             new User(i, "N" + i);
         }
         System.gc();
