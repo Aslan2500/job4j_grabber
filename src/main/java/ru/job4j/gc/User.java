@@ -32,10 +32,9 @@ public class User {
 
     public static void main(String[] args) throws Throwable {
         GCDemo.info();
-        for (int i = 0; i < 100000; i++) {
-            new User(i, "N" + i).finalize();
+        for (int i = 0; i < 10000; i++) {
+            new User(i, "N" + i);
         }
-        System.gc();
         GCDemo.info();
     }
 }
