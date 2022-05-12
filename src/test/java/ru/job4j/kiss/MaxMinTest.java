@@ -1,6 +1,5 @@
 package ru.job4j.kiss;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,14 +18,10 @@ public class MaxMinTest {
         list.add(2);
         list.add(30);
         MaxMin maxMin = new MaxMin();
-        Comparator<Integer> comparator = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1.compareTo(o2);
-            }
-        };
+        Comparator<Integer> comparator = Integer::compareTo;
         assertThat(maxMin.max(list, comparator), is(30));
     }
+
     @Test
     public void whenMin() {
         List<Integer> list = new ArrayList<>();
@@ -35,12 +30,7 @@ public class MaxMinTest {
         list.add(2);
         list.add(30);
         MaxMin maxMin = new MaxMin();
-        Comparator<Integer> comparator = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1.compareTo(o2);
-            }
-        };
+        Comparator<Integer> comparator = Integer::compareTo;
         assertThat(maxMin.min(list, comparator), is(1));
     }
 }
