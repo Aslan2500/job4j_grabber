@@ -38,7 +38,7 @@ public class ReportEngineTest {
                 .append(worker.getName()).append(";")
                 .append(worker.getHired()).append(";")
                 .append(worker.getFired()).append(";")
-                .append(worker.getSalary() / 64).append(";")
+                .append(worker.getSalary() / ReportAccountant.USD).append(";")
                 .append(System.lineSeparator());
         assertThat(engine.generate(em -> true), is(expect.toString()));
     }
@@ -48,10 +48,15 @@ public class ReportEngineTest {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
+        Employee worker1 = new Employee("Alan", now, now, 200);
         store.add(worker);
+        store.add(worker1);
         Report engine = new ReportHR(store);
         StringBuilder expect = new StringBuilder()
                 .append("Name; Salary;")
+                .append(System.lineSeparator())
+                .append(worker1.getName()).append(";")
+                .append(worker1.getSalary()).append(";")
                 .append(System.lineSeparator())
                 .append(worker.getName()).append(";")
                 .append(worker.getSalary()).append(";")
